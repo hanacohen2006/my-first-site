@@ -2,7 +2,7 @@
 const user = JSON.parse(localStorage.getItem("user"));
 if (!user || user.role !== "admin") {
     alert("אין הרשאה – יש להתחבר כמנהל");
-    window.location.href = "../pages/login.html";
+    window.location.href = "../docs/login.html";
 }
 
 // ── אתחול ──────────────────────────────────────────────────────────────────

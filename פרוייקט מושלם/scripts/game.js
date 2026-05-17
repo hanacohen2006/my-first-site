@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) { window.location.href = "../pages/login.html"; }
+    if (!user) { window.location.href = "../docs/login.html"; }
 
     let gameEnded    = false;
     const BOARD_SIZE = 20;

@@ -11,7 +11,7 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
     if (role === "admin") {
         if (pass !== "1234") { alert("סיסמה שגויה"); return; }
         localStorage.setItem("user", JSON.stringify({ id: "admin", name, role: "admin" }));
-        window.location.href = "../pages/scores.html";
+        window.location.href = "../docs/scores.html";
         return;
     }
 
@@ -34,5 +34,5 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
 
     // כניסה מוצלחת – שומרים עם ה-id הייחודי של השחקן
     localStorage.setItem("user", JSON.stringify({ id: match.id, name: match.name, role: "player" }));
-    window.location.href = "../pages/game.html";
+    window.location.href = "../docs/game.html";
 });

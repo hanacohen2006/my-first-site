@@ -29,5 +29,5 @@ if (exists) {
     // שמירת user עם id ייחודי
     localStorage.setItem("user", JSON.stringify({ id: newPlayer.id, name, role: "player" }));
     alert("נרשמת בהצלחה! מתחילים לשחק 🦕");
-    window.location.href = "../pages/game.html";
+    window.location.href = "../docs/game.html";
 });
