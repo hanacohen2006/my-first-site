@@ -1,0 +1,695 @@
+:root {
+    --blue:         #2563eb;
+    --blue-dark:    #1d4ed8;
+    --blue-light:   #bfdbfe;
+    --pink:         #ac0e65;
+    --green:        #16a34a;
+    --red:          #ac0f8a;
+    --bg-overlay:   rgba(0,0,0,0.50);
+    --glass-border: rgba(255,255,255,0.20);
+    --radius:       12px;
+    --shadow:       0 4px 20px rgba(0,0,0,0.5);
+    --topbar-h:    46px;
+    --bottombar-h: 68px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+    font-family: Arial, sans-serif;
+    direction: rtl;
+    text-align: center;
+    color: white;
+    background: url("../image/image.jpg") center/cover no-repeat fixed;
+    overflow-x: hidden;
+}
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: var(--bg-overlay);
+    z-index: 0;
+    pointer-events: none;
+}
+body > * { position: relative; z-index: 1; }
+
+/* ══ דפי כניסה ══════════════════════════════════════════ */
+body.page-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100dvh;
+}
+.welcome-card, .login-card {
+    background: rgba(10,18,50,0.82);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px;
+    padding: 40px 32px;
+    width: min(92vw, 380px);
+    box-shadow: var(--shadow);
+}
+.dino-logo { font-size: 54px; margin-bottom: 8px; }
+h1 { font-size: clamp(20px,5vw,30px); margin-bottom: 8px; text-shadow: 0 2px 8px rgba(0,0,0,0.7); }
+.subtitle { color: #93c5fd; margin-bottom: 24px; font-size: 14px; }
+.field { margin-bottom: 13px; }
+.field input, .field select {
+    width: 100%; padding: 11px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--glass-border);
+    background: rgba(255,255,255,0.12);
+    color: white; font-size: 15px; text-align: right; outline: none;
+    transition: border 0.2s;
+}
+.field input::placeholder { color: #93c5fd; }
+.field input:focus, .field select:focus { border-color: var(--blue); }
+.field select option { background: #1e3a8a; color: white; }
+
+/* ══ כפתורים ════════════════════════════════════════════ */
+.btn-main {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: white; border: none; border-radius: var(--radius);
+    padding: 11px 24px; font-size: 15px; font-weight: bold;
+    cursor: pointer; text-decoration: none;
+    box-shadow: 0 3px 10px rgba(37,99,235,0.45);
+    transition: transform .15s, box-shadow .15s;
+    width: 100%; margin-top: 6px;
+}
+.btn-main:hover  { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(37,99,235,0.55); }
+.btn-main:active { transform: translateY(0); }
+.btn-exit {
+    background: rgba(255,255,255,0.15);
+    color: white; border: 1px solid var(--glass-border);
+    border-radius: 8px; padding: 5px 14px; font-size: 13px;
+    cursor: pointer; text-decoration: none; transition: background .2s; white-space: nowrap;
+}
+.btn-exit:hover { background: rgba(255,255,255,0.28); }
+.btn-danger {
+    background: linear-gradient(135deg, var(--red), #d60c6a);
+    color: white; border: none; border-radius: var(--radius);
+    padding: 9px 18px; font-size: 14px; font-weight: bold;
+    cursor: pointer; transition: transform .15s;
+}
+.btn-danger:hover { transform: translateY(-1px); }
+
+/* ══ דף המשחק ═══════════════════════════════════════════ */
+body.game-body {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+#topBar {
+    flex: 0 0 var(--topbar-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 12px;
+    background: rgba(5,12,40,0.82);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    white-space: nowrap;
+}
+#topBar > * { font-weight: bold; font-size: clamp(11px,2.2vw,15px); }
+#score    { color: #fde68a; }
+#timerBox { color: #86efac; }
+/* #player בטובר הוסר — עכשיו badge מתחת ללוח */
+
+#gameArea {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    overflow: hidden;
+    min-height: 0;
+}
+
+#sidePanel {
+    flex: 0 0 auto;
+    width: clamp(115px,17vw,165px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 6px;
+    background: rgba(5,12,40,0.60);
+    border-left: 1px solid var(--glass-border);
+}
+
+/* ══ שעון מעוצב ═════════════════════════════════════════ */
+#clockCanvas {
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+    filter: drop-shadow(0 0 14px rgba(37,99,235,0.7)) drop-shadow(0 0 28px rgba(99,102,241,0.4));
+    border-radius: 50%;
+}
+#clockLabel { font-size: clamp(10px,1.5vw,13px); color: #bfdbfe; line-height: 1.5; }
+#clockLabel strong { color: #fde68a; display: block; font-size: 1.2em; }
+
+#wordBox {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-size: clamp(10px,1.6vw,14px);
+    width: 100%;
+    word-break: break-all;
+}
+#word { font-weight: bold; color: #fde68a; letter-spacing: 2px; }
+
+/* ══ עטיפת לוח – עמודה: לוח + badge שחקן ══════════════ */
+#boardWrap {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 0;
+    padding: 6px;
+    gap: 6px;
+}
+
+/* גודל הלוח – מקוצר ב-36px כדי לפנות מקום ל-badge */
+#board {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    grid-template-rows:    repeat(20, 1fr);
+    width:  min(
+        calc(100vw - clamp(115px,17vw,165px) - 12px),
+        calc(100dvh - var(--topbar-h) - var(--bottombar-h) - 42px)
+    );
+    height: min(
+        calc(100vw - clamp(115px,17vw,165px) - 12px),
+        calc(100dvh - var(--topbar-h) - var(--bottombar-h) - 42px)
+    );
+    border: 2px solid rgba(37,99,235,0.65);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 28px rgba(0,0,0,0.65);
+}
+
+/* ══ Badge שחקן מתחת ללוח, ברוחב הלוח ══════════════════ */
+#playerBadge {
+    width: min(
+        calc(100vw - clamp(115px,17vw,165px) - 12px),
+        calc(100dvh - var(--topbar-h) - var(--bottombar-h) - 42px)
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(10,18,50,0.72);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 5px 18px;
+    font-size: clamp(11px,1.8vw,14px);
+    font-weight: bold;
+    color: #bfdbfe;
+    white-space: nowrap;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    flex-shrink: 0;
+}
+#playerBadge .badge-name { color: #fde68a; }
+
+.cell {
+    border: 1px solid rgba(30,58,138,0.35);
+    color: var(--pink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    user-select: none;
+    font-size: clamp(5px, 1.05vw, 13px);
+    transition: background .1s;
+}
+.startWord { background: #bfdbfe !important; color: var(--pink); }
+.anchor {
+    background: #fef08a !important;
+    border: 2px solid var(--pink) !important;
+    color: #be0b56;
+    box-shadow: inset 0 0 5px rgba(219,39,119,0.4);
+    z-index: 2;
+}
+
+#bottomBar {
+    flex: 0 0 var(--bottombar-h);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 12px;
+    background: rgba(5,12,40,0.82);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--glass-border);
+}
+#rack {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    gap: 5px;
+    flex: 1;
+    max-height: calc(var(--bottombar-h) - 10px);
+    overflow: hidden;
+}
+.letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width:  clamp(26px,5.2vw,40px);
+    height: clamp(26px,5.2vw,40px);
+    border-radius: 7px;
+    background: linear-gradient(135deg,#3b82f6,#1d4ed8);
+    color: white; cursor: grab;
+    font-weight: bold; font-size: clamp(11px,2.1vw,17px);
+    user-select: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    transition: transform .12s;
+    touch-action: none;
+}
+.letter:hover { transform: translateY(-3px) scale(1.12); }
+
+#submit {
+    flex-shrink: 0;
+    background: linear-gradient(135deg,var(--green),#15803d);
+    color: white; border: none; border-radius: var(--radius);
+    padding: 9px 16px;
+    font-size: clamp(12px,2.1vw,15px);
+    font-weight: bold; cursor: pointer; white-space: nowrap;
+    box-shadow: 0 3px 10px rgba(22,163,74,0.45);
+    transition: transform .15s;
+}
+#submit:hover { transform: translateY(-2px); }
+
+.popup {
+    position: fixed;
+    top: calc(var(--topbar-h) + 12px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-16px);
+    padding: 12px 28px;
+    border-radius: 14px;
+    font-size: clamp(15px,3.5vw,21px);
+    font-weight: bold; color: white;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s, transform .3s;
+    z-index: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+    white-space: nowrap;
+}
+.popup.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.popup-win  { background: linear-gradient(135deg,#16a34a,#15803d); border: 2px solid #4ade80; }
+.popup-fail { background: linear-gradient(135deg,#be185d,#9d174d); border: 2px solid #f472b6; }
+
+.end-screen {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.88);
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; pointer-events: none; transition: opacity .5s; z-index: 999;
+}
+.end-screen.show { opacity: 1; pointer-events: all; }
+.end-content { text-align: center; }
+.trophy { font-size: clamp(60px,15vw,100px); filter: drop-shadow(0 4px 14px rgba(255,200,0,0.7)); margin-bottom: 10px; }
+.end-content h1 { font-size: clamp(26px,7vw,50px); margin-bottom: 14px; }
+#finalScore { font-size: clamp(17px,3.5vw,26px); color: #fde68a; margin-bottom: 22px; }
+.end-content .btn-main { width: auto; padding: 12px 32px; }
+
+/* ══════════════════════════════════════════════════════════
+   ✦  יהלומים מנצנצים  ✦
+   ══════════════════════════════════════════════════════════ */
+#diamondLayer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 2;
+}
+.diamond {
+    position: absolute;
+    bottom: -60px;
+    width: 14px;
+    height: 14px;
+    transform: rotate(45deg);
+    opacity: 0;
+    animation: floatDiamond linear infinite;
+}
+.diamond:nth-child(5n+1) { background: radial-gradient(circle at 35% 35%, #93c5fd, #2563eb); box-shadow: 0 0 8px 2px rgba(37,99,235,0.7); }
+.diamond:nth-child(5n+2) { background: radial-gradient(circle at 35% 35%, #e879f9, #7c3aed); box-shadow: 0 0 8px 2px rgba(124,58,237,0.7); }
+.diamond:nth-child(5n+3) { background: radial-gradient(circle at 35% 35%, #fde68a, #f59e0b); box-shadow: 0 0 8px 2px rgba(245,158,11,0.7); }
+.diamond:nth-child(5n+4) { background: radial-gradient(circle at 35% 35%, #f9a8d4, #db2777); box-shadow: 0 0 8px 2px rgba(219,39,119,0.7); }
+.diamond:nth-child(5n+0) { background: radial-gradient(circle at 35% 35%, #67e8f9, #0891b2); box-shadow: 0 0 8px 2px rgba(8,145,178,0.7); }
+.diamond.sm { width: 8px;  height: 8px; }
+.diamond.md { width: 14px; height: 14px; }
+.diamond.lg { width: 20px; height: 20px; }
+@keyframes floatDiamond {
+    0%   { transform: rotate(45deg) translateY(0)   scale(0.6); opacity: 0; }
+    8%   { opacity: 0.9; }
+    80%  { opacity: 0.7; }
+    100% { transform: rotate(45deg) translateY(-110vh) scale(1.1); opacity: 0; }
+}
+
+/* ══ ניהול – בסגנון דף כניסה ═══════════════════════════ */
+body.admin-body {
+    overflow-y: auto;
+    min-height: 100dvh;
+    padding-bottom: 40px;
+}
+.admin-wrap { max-width: 900px; margin: 0 auto; padding: 28px 16px; }
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    background: rgba(10,18,50,0.82);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px;
+    padding: 18px 24px;
+    box-shadow: var(--shadow);
+}
+.admin-header h1 {
+    font-size: clamp(18px,4.5vw,28px);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+.stats-row { display: flex; gap: 14px; margin-bottom: 22px; flex-wrap: wrap; justify-content: center; }
+.stat-card {
+    flex: 1; min-width: 120px;
+    background: rgba(10,18,50,0.82);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 20px 14px;
+    box-shadow: var(--shadow);
+    transition: transform .2s, box-shadow .2s;
+}
+.stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(37,99,235,0.35); }
+.stat-num   { font-size: clamp(28px,5.5vw,44px); font-weight: bold; color: #fde68a; }
+.stat-label { font-size: 12px; color: #93c5fd; margin-top: 5px; }
+
+.admin-toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.admin-toolbar input {
+    flex: 1; min-width: 160px;
+    padding: 11px 16px; border-radius: var(--radius);
+    border: 1px solid var(--glass-border);
+    background: rgba(10,18,50,0.82);
+    backdrop-filter: blur(12px);
+    color: white; font-size: 14px; text-align: right; outline: none;
+    transition: border .2s, box-shadow .2s;
+    box-shadow: var(--shadow);
+}
+.admin-toolbar input::placeholder { color: #93c5fd; }
+.admin-toolbar input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.25); }
+
+.table-wrap {
+    background: rgba(10,18,50,0.82);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+}
+table { width: 100%; border-collapse: collapse; }
+thead { background: linear-gradient(to left, rgba(37,99,235,0.7), rgba(29,78,216,0.9)); border-bottom: 1px solid var(--glass-border); }
+th, td { padding: 13px 16px; text-align: center; font-size: clamp(12px,2vw,15px); border-bottom: 1px solid rgba(255,255,255,0.07); }
+th { color: #e0f2fe; font-weight: bold; }
+td { color: #cbd5e1; }
+tbody tr { transition: background .18s; }
+tbody tr:hover { background: rgba(37,99,235,0.18); }
+.rank-1 td:nth-child(2)::before { content: "🥇 "; }
+.rank-2 td:nth-child(2)::before { content: "🥈 "; }
+.rank-3 td:nth-child(2)::before { content: "🥉 "; }
+.btn-delete {
+    background: linear-gradient(135deg, var(--red), #af0f7f);
+    color: white; border: none;
+    padding: 6px 14px; border-radius: 8px; cursor: pointer;
+    font-size: 12px; font-weight: bold;
+    transition: transform .15s, box-shadow .15s;
+    box-shadow: 0 2px 8px rgba(196, 7, 111, 0.4);
+}
+.btn-delete:hover { transform: scale(1.07); box-shadow: 0 4px 14px rgba(235, 19, 137, 0.55); }
+.empty-table { padding: 36px; color: #93c5fd; font-size: 15px; }
+
+/* ══ רספונסיביות ════════════════════════════════════════ */
+@media (max-width: 640px) {
+    :root { --topbar-h: 40px; --bottombar-h: 58px; }
+    #gameArea { flex-direction: column; }
+    #sidePanel {
+        width: 100%; flex-direction: row;
+        justify-content: center; padding: 4px 8px; gap: 10px;
+        background: rgba(5,12,40,0.72);
+        border-left: none; border-bottom: 1px solid var(--glass-border);
+        flex: 0 0 auto;
+    }
+    #clockCanvas { width: clamp(60px,17vw,86px) !important; }
+    #wordBox { min-width: 100px; font-size: 11px; }
+    #clockLabel { font-size: 10px; }
+    #boardWrap { flex: 1 1 0; padding: 3px; }
+    #board, #playerBadge {
+        width:  min(calc(100vw - 6px), calc(100dvh - var(--topbar-h) - var(--bottombar-h) - 102px));
+    }
+    #board {
+        height: min(calc(100vw - 6px), calc(100dvh - var(--topbar-h) - var(--bottombar-h) - 102px));
+    }
+    .letter { width: 25px; height: 25px; font-size: 10px; }
+    #submit  { padding: 7px 10px; font-size: 11px; }
+}
+@media (max-width: 380px) {
+    :root { --bottombar-h: 52px; }
+    .letter { width: 22px; height: 22px; font-size: 9px; }
+}
+@media (orientation: landscape) and (max-height: 480px) {
+    :root { --topbar-h: 34px; --bottombar-h: 48px; }
+    #sidePanel { width: clamp(90px,13vw,125px); }
+    #clockCanvas { width: 72px !important; }
+}
+@keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.3)} 100%{transform:scale(1)} }
+     
+
+
+
+/* ── אנימציית כניסה ──────────────────────────────────── */
+@keyframes adminFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.admin-wrap > * {
+    animation: adminFadeIn 0.4s ease both;
+}
+.admin-wrap > *:nth-child(1) { animation-delay: 0.05s; }
+.admin-wrap > *:nth-child(2) { animation-delay: 0.15s; }
+.admin-wrap > *:nth-child(3) { animation-delay: 0.25s; }
+
+/* ── כותרת ─────────────────────────────────────────────── */
+.admin-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.admin-page-icon {
+    font-size: 36px;
+    line-height: 1;
+    filter: drop-shadow(0 0 12px rgba(99,102,241,0.65));
+}
+
+.admin-subtitle {
+    color: #93c5fd;
+    font-size: 13px;
+    margin-top: 3px;
+    font-weight: normal;
+}
+
+/* ── כרטיס ניווט ────────────────────────────────────────── */
+.admin-nav-card {
+    background: rgba(10, 18, 50, 0.82);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 14px 20px;
+    box-shadow: var(--shadow);
+}
+
+.admin-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* ── כפתורי ניווט ────────────────────────────────────────── */
+.nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #bfdbfe;
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.nav-btn:hover {
+    background: rgba(37, 99, 235, 0.30);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.30);
+}
+
+.nav-btn.active {
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: white;
+    border-color: rgba(255, 255, 255, 0.20);
+    box-shadow: 0 3px 12px rgba(37, 99, 235, 0.50);
+}
+
+.nav-btn.active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.60);
+}
+
+.nav-icon {
+    font-size: 16px;
+}
+
+/* ── אזור output ─────────────────────────────────────────── */
+.admin-output {
+    background: rgba(10, 18, 50, 0.82);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px;
+    padding: 28px 24px;
+    box-shadow: var(--shadow);
+    min-height: 100px;
+    color: #93c5fd;
+    font-size: 14px;
+    text-align: center;
+}
+
+.admin-output:empty::before {
+    content: "אין מידע להצגה כרגע";
+    opacity: 0.45;
+    display: block;
+    padding: 20px 0;
+}
+
+/* ── רספונסיביות ─────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .admin-title-wrap { gap: 10px; }
+    .admin-page-icon  { font-size: 28px; }
+    .nav-btn          { padding: 8px 14px; font-size: 13px; }
+    .admin-output     { padding: 20px 14px; }
+}
+
+
+/* ── קישור הרשמה / כניסה ────────────────────────────── */
+.register-link {
+    margin-top: 16px;
+    text-align: center;
+    color: #93c5fd;
+    font-size: 0.9rem;
+}
+.register-link a {
+    color: #60a5fa;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.register-link a:hover { color: #ffffff; }
+
+/* ══ דובי קופץ – דף הבית ════════════════════════════════ */
+@keyframes bearBounce {
+    0%,100% { transform: translateY(0)     scaleY(1)    scaleX(1);    }
+    30%      { transform: translateY(-38px) scaleY(1.08) scaleX(0.94); }
+    50%      { transform: translateY(-44px) scaleY(1.12) scaleX(0.92); }
+    70%      { transform: translateY(-10px) scaleY(0.96) scaleX(1.04); }
+    85%      { transform: translateY(0)     scaleY(0.93) scaleX(1.07); }
+    92%      { transform: translateY(-6px)  scaleY(1.03) scaleX(0.98); }
+}
+@keyframes shadowPulse {
+    0%,100% { transform: scaleX(1);    opacity: 0.4; }
+    50%      { transform: scaleX(0.55); opacity: 0.15; }
+}
+@keyframes earWiggle {
+    0%,100% { transform: rotate(0deg);   }
+    40%      { transform: rotate(-12deg); }
+    60%      { transform: rotate(8deg);   }
+}
+@keyframes sparkle {
+    0%   { opacity: 0; transform: scale(0)   rotate(0deg);   }
+    40%  { opacity: 1; transform: scale(1.2) rotate(180deg); }
+    100% { opacity: 0; transform: scale(0)   rotate(360deg); }
+}
+@keyframes bearMsgFade {
+    from { opacity: 0; transform: translateY(5px); }
+    to   { opacity: 1; transform: translateY(0);   }
+}
+
+.bear-outer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.bear-stage {
+    position: relative;
+    width: 120px;
+    height: 114px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+.bear-svg {
+    animation: bearBounce 1.2s cubic-bezier(.36,.07,.19,.97) infinite;
+    cursor: pointer;
+    display: block;
+    filter: drop-shadow(0 0 18px rgba(147,51,234,0.65))
+            drop-shadow(0 0 8px rgba(219,39,119,0.4));
+}
+.bear-svg:active { filter: brightness(1.25); }
+.sparkle-el {
+    position: absolute;
+    animation: sparkle 1.2s ease-in-out infinite;
+    pointer-events: none;
+}
+.bear-shadow {
+    width: 56px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(147,51,234,0.45);
+    animation: shadowPulse 1.2s ease-in-out infinite;
+    margin-top: -2px;
+}
+#bearMsg {
+    margin-top: 9px;
+    color: #e879f9;
+    font-size: 13px;
+    min-height: 20px;
+    text-align: center;
+    animation: bearMsgFade 0.3s ease both;
+}
+.ear-left {
+    transform-origin: 28px 16px;
+    animation: earWiggle 1.2s ease-in-out infinite;
+    animation-delay: 0.15s;
+}
+.ear-right {
+    transform-origin: 62px 16px;
+    animation: earWiggle 1.2s ease-in-out infinite;
+    animation-delay: 0.35s;
+}
