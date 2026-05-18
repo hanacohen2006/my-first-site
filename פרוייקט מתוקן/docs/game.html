@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>בונים מילים – משחק</title>
+<link rel="stylesheet" href="../styles/style.css">
+</head>
+<body class="game-body">
+
+<div id="topBar">
+    <div id="player">שחקן: </div>
+    <div id="score">ניקוד: 0</div>
+    <div id="timerBox">⏱ <span id="timer">60</span></div>
+    <a href="../docs/index.html" class="btn-exit">יציאה</a>
+</div>
+
+<div id="gameArea">
+
+    <div id="sidePanel">
+        <canvas id="clockCanvas" width="200" height="200"></canvas>
+        <div id="clockLabel">מיקום: <strong id="clockRule">--</strong></div>
+        <div id="wordBox">מילה: <span id="word"></span></div>
+    </div>
+
+    <div id="boardWrap">
+    <div id="board"></div>
+    <div id="playerBadge">
+        <!-- מולא אוטומטית ע"י game.js -->
+    </div>
+</div>
+
+</div>
+
+<div id="bottomBar">
+    <div id="rack"></div>
+    <button id="submit">✔ בדוק מילה</button>
+</div>
+
+<div id="winPopup"  class="popup popup-win">⭐ כל הכבוד! ⭐</div>
+<div id="failPopup" class="popup popup-fail">❌ נסה שוב!</div>
+
+<div id="endScreen" class="end-screen">
+    <div class="end-content">
+        <div class="trophy">🏆</div>
+        <h1>אלוףףף!</h1>
+        <div id="finalScore"></div>
+        <button class="btn-main" onclick="location.href='../docs/index.html'">משחק חדש</button>
+    </div>
+</div>
+
+<audio id="bgMusic"   src="../sounds/background.mp3" loop></audio>
+<audio id="loseSound" src="../sounds/lose.mp3"></audio>
+<audio id="winSound"  src="../sounds/win.mp3"></audio>
+<audio id="clockSound" src="../sounds/clocksound.mp3"></audio>
+<audio id="enterSound" src="../sounds/entersound.mp3"></audio>
+<script src="../scripts/game.js" defer></script>
+</body>
+</html>
